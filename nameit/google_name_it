@@ -1,14 +1,14 @@
-#!/usr/bin/python
+#! /usr/bin/env python
 
-import roslib; roslib.load_manifest('nameit')
+#import roslib; roslib.load_manifest('nameit')
 
-from nameit import nameit
+from nameitu import nameitu
 
 #rosimports
 import rospy
-import nameit.srv.NameItGoogle
-#.NameItGoogle.srv import *
-
+#import nameit.srv.NameItGoogle
+#NameItGoogle.srv import *
+from nameit.srv import *
 
 def nameitgoogle(req):
   return nameit(req.data)

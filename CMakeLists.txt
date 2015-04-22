@@ -10,12 +10,13 @@ generate_messages(DEPENDENCIES std_msgs sensor_msgs)
 
 catkin_package(CATKIN_DEPENDS message_runtime std_msgs)
 
-#add_dependencies(nameit nameit_genpy)
+#add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_genpy)
 
 # do not wildcard install files since the root folder of the package will contain a debian folder for releasing
 catkin_install_python(PROGRAMS
-  nameit/nameit.py
+  nameit/nameitu.py
   nameit/google_name_it
+  nameit/nameit_client
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 

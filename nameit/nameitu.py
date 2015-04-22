@@ -2,8 +2,6 @@
 
 import sys
 import os
-import logging 
-log=logging.getLogger()
 
 import re
 import sys
@@ -57,7 +55,7 @@ def curl_get(url):
 
 
 
-def nameit(picture):
+def nameitu(picture):
     #curl --trace-ascii trace -c kekstopf -L -A 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.91 Safari/537.36' -F encoded_image=@"$1" https://www.google.com/searchbyimage/upload
 
     import re
@@ -186,8 +184,6 @@ def nameit(picture):
 
 
 def main(argv):
-    log=logging.getLogger()
-    log.setLevel(20)
     import argparse
     parser = argparse.ArgumentParser(description='Take Pictures and ask Google to name them')
     parser.add_argument('-s', '--snap', action='store_true', help='take a snapshot')
