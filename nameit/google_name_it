@@ -1,0 +1,23 @@
+#!/usr/bin/python
+
+import roslib; roslib.load_manifest('nameit')
+
+from nameit import nameit
+
+#rosimports
+import rospy
+import nameit.srv.NameItGoogle
+#.NameItGoogle.srv import *
+
+
+def nameitgoogle(req):
+  return nameit(req.data)
+
+def init():
+    rospy.init_node('imagegoogler')
+    s = rospy.Service('nameitgoogle', NameItGoogle, nameitgoogle)
+    print "Ready to tag Things"
+    rospy.spin()
+
+if __name__ == "__main__":
+    init()
