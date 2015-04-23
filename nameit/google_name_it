@@ -8,10 +8,13 @@ from nameitu import nameitu
 import rospy
 #import nameit.srv.NameItGoogle
 #NameItGoogle.srv import *
+from sensor_msgs.msg import CompressedImage
 from nameit.srv import *
 
 def nameitgoogle(req):
-  return nameit(req.data)
+  #print req
+  type(req)
+  return nameitu(req.compimg.data)
 
 def init():
     rospy.init_node('imagegoogler')

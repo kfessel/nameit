@@ -5,6 +5,7 @@ import os
 
 #rosimports
 import rospy
+from sensor_msgs.msg import CompressedImage
 from nameit.srv import *
 
 #std_msgs/Header header
@@ -14,19 +15,21 @@ from nameit.srv import *
 def whatisthis(img):
   rospy.wait_for_service('nameitgoogle')
   try:
-    nameit = rospy.ServiceProxy('nameitgoogle', NameItGoogle)
-    imc=NameItGoogle()
-    #imc.header.seq = 0
-    #imc.header.stamp = 0
-    #imc.header.frame_id "0"
-    #imc.format="png"
+    imc=CompressedImage()
+    imc.header.seq = 0
+    imc.header.stamp = rospy.Time.now()
+    imc.header.frame_id = "tralala"
+    imc.format="png"
     imc.data=img
-    resp1 = nameit( imc )
+    nameit = rospy.ServiceProxy('nameitgoogle', NameItGoogle)
+    resp1 = nameit( compimg=imc )
     return resp1.sum
   except rospy.ServiceException, e:
     print "Service call failed: %s"%e
 
 def main(argv):
+    rospy.init_node('imageclieen')
+    
     import argparse
     parser = argparse.ArgumentParser(description='Take Pictures and ask Google to name them')
     parser.add_argument('-s', '--snap', action='store_true', help='take a snapshot')

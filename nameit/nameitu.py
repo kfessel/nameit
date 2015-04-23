@@ -77,13 +77,6 @@ def nameitu(picture):
     buffer = BytesIO()
     curl = pycurl.Curl()
     
-    #postdict=[("encoded_image", (curl.FORM_FILE,picture_file)),]
-    
-    #import StringIO
-    #datastrbuff = StringIO.StringIO(databuff)
-    
-    #print img
-    
     postdict=[("encoded_image", (pycurl.FORM_BUFFER, "picture", pycurl.FORM_BUFFERPTR, picture)),]
     curl.setopt(curl.URL,"https://www.google.com/searchbyimage/upload")
     curl.setopt(curl.WRITEFUNCTION, buffer.write)
@@ -95,8 +88,6 @@ def nameitu(picture):
     curl.setopt(curl.HTTPPOST,postdict)
     curl.perform()
     curl.close()
-    
-    databuff.close()
     
     page = buffer.getvalue()
     
