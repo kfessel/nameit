@@ -1,3 +1,3 @@
 #word-occurence
-string string
+string word
 uint32 occurence

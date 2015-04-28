@@ -1,38 +1,44 @@
 #!/usr/bin/python
 
 import sys
+import os
 
 #rosimports
 import rospy
-from nameitgoogle.srv import *
+from sensor_msgs.msg import CompressedImage
+from nameit.srv import *
 
 #std_msgs/Header header
 #string format
 #uint8[] data
 
+
+
 def whatisthis(img):
   rospy.wait_for_service('nameitgoogle')
-   try:
-     nameit = rospy.ServiceProxy('nameitgoogle', NameItGoogle)
-     req = {}
-     req.data = img
-     resp1 = nameit(req)
-     return resp1.sum
-   except rospy.ServiceException, e:
-     print "Service call failed: %s"%e
+  try:
+    imc=CompressedImage()
+    imc.header.seq = 0
+    imc.header.stamp = rospy.Time.now()
+    imc.header.frame_id = "tralala"
+    imc.format="png"
+    imc.data=img
+    nameit = rospy.ServiceProxy('nameitgoogle', NameItGoogle)
+    ret = nameit( compimg=imc ).ret
+    return ret
+  except rospy.ServiceException, e:
+    print "Service call failed: %s"%e
 
 def main(argv):
-    log=logging.getLogger()
-    log.setLevel(20)
+    rospy.init_node('imageclieen')
+    
     import argparse
     parser = argparse.ArgumentParser(description='Take Pictures and ask Google to name them')
     parser.add_argument('-s', '--snap', action='store_true', help='take a snapshot')
     parser.add_argument('-c', '--cam', nargs='?', type=int, help='use cam Number N defaults to 0', default=0)
     parser.add_argument('NAME', nargs='?', help='Filename defaults to snap.jpg', default="snap.jpg")
     cmdline_args = parser.parse_args(sys.argv[1:]) #cut the program-name off the list 
-    
-    #print  cmdline_args
-    
+
     picture_file=cmdline_args.NAME
     
     if cmdline_args.snap:
@@ -47,12 +53,40 @@ def main(argv):
     img=imgbuff.read()
     ret = whatisthis(img)
     imgbuff.close()
-    for j in ret:
+    
+    #print ret
+    
+    for j in [ret.tags, ret.words, ret.bigrams]:
       for i in j:
         print i
       print "################################################################"
-
     
+    
+    import matplotlib.pyplot as plt
+    
+    sizes=[]
+    labels=[]
+    
+    for i in ret.words:
+      labels.append(i.word)
+      sizes.append(i.occurence)
+    
+    plt.subplot(2, 1, 1)
+    plt.pie(sizes, labels=labels)
+    plt.axis('equal')
+    
+    sizes=[]
+    labels=[]
+    
+    for i in ret.bigrams:
+      labels.append(i.word)
+      sizes.append(i.occurence)
+    
+    plt.subplot(2, 1, 2)
+    plt.pie(sizes, labels=labels)
+    plt.axis('equal')
+    
+    plt.show()
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv)) 
