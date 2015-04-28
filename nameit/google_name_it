@@ -2,19 +2,33 @@
 
 #import roslib; roslib.load_manifest('nameit')
 
-from nameitu import nameitu
-
+from google_sbi_tagit import nameit as nameitu
 #rosimports
 import rospy
 #import nameit.srv.NameItGoogle
 #NameItGoogle.srv import *
 from sensor_msgs.msg import CompressedImage
+from nameit.msg import *
 from nameit.srv import *
 
 def nameitgoogle(req):
-  #print req
-  type(req)
-  return nameitu(req.compimg.data)
+  
+  ret = DescriptionTags()
+  
+  tags, words, bigrams = nameitu(req.compimg.data)
+  
+  for i in tags:
+    ret.tags.append(i)
+  
+  for i in words:
+    word,n = i
+    ret.words.append(WordOccurrence(word,n))
+  
+  for i in bigrams:
+    word,n = i
+    ret.bigrams.append(WordOccurrence(word,n))
+  
+  return ret
 
 def init():
     rospy.init_node('imagegoogler')

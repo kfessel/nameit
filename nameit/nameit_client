@@ -12,6 +12,8 @@ from nameit.srv import *
 #string format
 #uint8[] data
 
+
+
 def whatisthis(img):
   rospy.wait_for_service('nameitgoogle')
   try:
@@ -22,8 +24,8 @@ def whatisthis(img):
     imc.format="png"
     imc.data=img
     nameit = rospy.ServiceProxy('nameitgoogle', NameItGoogle)
-    resp1 = nameit( compimg=imc )
-    return resp1.sum
+    ret = nameit( compimg=imc ).ret
+    return ret
   except rospy.ServiceException, e:
     print "Service call failed: %s"%e
 
@@ -36,9 +38,7 @@ def main(argv):
     parser.add_argument('-c', '--cam', nargs='?', type=int, help='use cam Number N defaults to 0', default=0)
     parser.add_argument('NAME', nargs='?', help='Filename defaults to snap.jpg', default="snap.jpg")
     cmdline_args = parser.parse_args(sys.argv[1:]) #cut the program-name off the list 
-    
-    #print  cmdline_args
-    
+
     picture_file=cmdline_args.NAME
     
     if cmdline_args.snap:
@@ -53,12 +53,40 @@ def main(argv):
     img=imgbuff.read()
     ret = whatisthis(img)
     imgbuff.close()
-    for j in ret:
+    
+    #print ret
+    
+    for j in [ret.tags, ret.words, ret.bigrams]:
       for i in j:
         print i
       print "################################################################"
-
     
+    
+    import matplotlib.pyplot as plt
+    
+    sizes=[]
+    labels=[]
+    
+    for i in ret.words:
+      labels.append(i.word)
+      sizes.append(i.occurence)
+    
+    plt.subplot(2, 1, 1)
+    plt.pie(sizes, labels=labels)
+    plt.axis('equal')
+    
+    sizes=[]
+    labels=[]
+    
+    for i in ret.bigrams:
+      labels.append(i.word)
+      sizes.append(i.occurence)
+    
+    plt.subplot(2, 1, 2)
+    plt.pie(sizes, labels=labels)
+    plt.axis('equal')
+    
+    plt.show()
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv)) 
