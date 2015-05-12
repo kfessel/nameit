@@ -14,23 +14,10 @@ catkin_package(CATKIN_DEPENDS message_runtime std_msgs)
 
 # do not wildcard install files since the root folder of the package will contain a debian folder for releasing
 catkin_install_python(PROGRAMS
-  nameit/google_sbi_tagit.py
+  py_google_sbi/google_sbi_tagit.py
+  py_google_sbi/snapshot.py
   nameit/google_name_it
   nameit/nameit_client
+  launch/sbi.launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
-
-# 
-# if(CATKIN_ENABLE_TESTING)
-#   find_package(rostest)
-#   foreach(T
-#       test/test-add-two-ints.launch
-#       test/test-peer-subscribe-notify.launch
-#       test/test-add-two-ints-with-roscpp-server.launch
-#       test/test-talker-listener.launch
-#       test/test-talker-listener-with-roscpp.launch
-#       test/test-on-shutdown.launch
-#       test/test-connection-header.launch)
-#      add_rostest(${T})
-#   endforeach()
-# endif()

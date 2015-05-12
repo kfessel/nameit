@@ -1,5 +1,11 @@
 TODO:
 Rename
-stopwords (nltk wordnet)
-rosparam configuration (stopword filter, #follow pictures)
-request hints
+#stopwords (nltk wordnet)
+#rosparam configuration (stopword filter, #follow pictures)
+#request hints
+Readme
+Comment
+  #google_name_it
+  #google_sbi_tagit.py
+  #nameit_client
+  #snapshot.py

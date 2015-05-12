@@ -1,0 +1,3 @@
+[submodule "py_google_sbi"]
+	path = py_google_sbi
+	url = https://github.com/fesselk/py_google_sbi.git

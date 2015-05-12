@@ -1,3 +1,4 @@
 sensor_msgs/CompressedImage compimg
+string hint
 ---
 DescriptionTags ret

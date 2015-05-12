@@ -1,21 +1,26 @@
 #! /usr/bin/env python
-
-#import roslib; roslib.load_manifest('nameit')
-
-from google_sbi_tagit import nameit as nameitu
+'''creates a nameit service for ROS using google_sbi_tag_it.py'''
+import google_sbi_tagit
 #rosimports
 import rospy
-#import nameit.srv.NameItGoogle
-#NameItGoogle.srv import *
 from sensor_msgs.msg import CompressedImage
 from nameit.msg import *
 from nameit.srv import *
 
 def nameitgoogle(req):
-  
+  '''translates the ros nameit service call to a call to google_sbi_tagit.nameit()'''
   ret = DescriptionTags()
   
-  tags, words, bigrams = nameitu(req.compimg.data)
+  google_sbi_tagit.config = {"stopwordfilter":rospy.get_param('~stopwordfilter',True),
+                             "Nimgres":rospy.get_param('~Nimgres',100),
+                             "NThreads":rospy.get_param('~NThreads',6),
+                             "NTop":rospy.get_param('~NTop',10)}
+  
+  if req.hint=="":
+    req.hint=None
+  
+  rospy.loginfo(str(google_sbi_tagit.config))
+  tags, words, bigrams = google_sbi_tagit.nameit(req.compimg.data,req.hint)
   
   for i in tags:
     ret.tags.append(i)
@@ -31,10 +36,12 @@ def nameitgoogle(req):
   return ret
 
 def init():
-    rospy.init_node('imagegoogler')
-    s = rospy.Service('nameitgoogle', NameItGoogle, nameitgoogle)
-    print "Ready to tag Things"
-    rospy.spin()
+  '''initializes a rosnode providing the nameit service'''
+
+  rospy.init_node('ImageGoogler')
+  s = rospy.Service('nameit', NameItGoogle, nameitgoogle)
+  print "Ready to tag Things"
+  rospy.spin()
 
 if __name__ == "__main__":
-    init()
+  init()
