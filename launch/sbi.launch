@@ -1,0 +1,9 @@
+<!--http://wiki.ros.org/roslaunch-->
+<launch>
+  <node pkg="nameit" type="google_name_it" name="sbi">
+    <param name="stopwordfilter" value="True" type="bool" />
+    <param name="Nimgres" value="75" type="int" />
+    <param name="NThreads" value="4" type="int" />
+    <param name="NTop" value="13" type="int" />
+  </node>
+</launch>
